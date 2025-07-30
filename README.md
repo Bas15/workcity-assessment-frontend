@@ -3,6 +3,7 @@
 This is the **frontend dashboard** for the WorkCity Assessment project. It provides a modern, responsive admin interface for managing clients and their projects. Built with **React**, **Vite**, **Tailwind CSS**, and **Redux Toolkit**, it connects to a RESTful backend for real-time data management.
 website link: https://workcity-assessment-frontend-opal.vercel.app/dashboard
 Note: The backend server may take 25-40 seconds to wind up
+
 ---
 
 ## 🚀 Features
