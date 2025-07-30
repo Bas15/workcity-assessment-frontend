@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { registerUser } from "../../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { showSuccess } from "../../utils/toast";
 
 const Signup = () => {
   const dispatch = useAppDispatch();
@@ -28,6 +29,7 @@ const Signup = () => {
     e.preventDefault();
     const result = await dispatch(registerUser(form));
     if (registerUser.fulfilled.match(result)) {
+      showSuccess("Account created successfully!");
       navigate("/login");
     }
   };
@@ -86,9 +88,35 @@ const Signup = () => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-purple-600 hover:bg-purple-700 p-2 rounded text-white"
+          className="w-full bg-purple-600 hover:bg-purple-700 p-2 rounded text-white flex items-center justify-center gap-2 disabled:opacity-50"
         >
-          {loading ? "Signing up..." : "Sign Up"}
+          {loading ? (
+            <>
+              <svg
+                className="w-4 h-4 animate-spin text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4l3.5-3.5L12 0v4a8 8 0 000 16v-4l-3.5 3.5L12 24v-4a8 8 0 01-8-8z"
+                ></path>
+              </svg>
+              Signing up...
+            </>
+          ) : (
+            "Sign Up"
+          )}
         </button>
         <p className="text-sm text-center text-gray-400">
           Already have an account?{" "}

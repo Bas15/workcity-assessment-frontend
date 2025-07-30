@@ -9,6 +9,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useAppSelector } from "../../store/hooks";
 import { useDeleteProject } from "../../api/clients/useDeleteProject";
+import { showSuccess } from "../../utils/toast";
 
 const ProjectDashboard = () => {
   const { clientId } = useParams();
@@ -20,6 +21,7 @@ const ProjectDashboard = () => {
   const handleDelete = async (projectId: string) => {
     if (confirm("Are you sure you want to delete this project?")) {
       await deleteProject(projectId);
+      showSuccess("Project deleted successfully");
       window.location.reload(); // Consider refetching instead of reloading
     }
   };

@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { showSuccess } from "../../utils/toast";
 
 interface ClientFormData {
   name: string;
@@ -68,12 +69,14 @@ const AddEditClientForm = () => {
             Authorization: `Bearer ${token}`,
           },
         });
+        showSuccess("Client updated successfully!");
       } else {
         await axios.post(`${API_URL}/clients`, formData, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
+        showSuccess("Client added successfully!");
       }
       navigate("/dashboard/clients");
     } catch (err: any) {
@@ -126,8 +129,29 @@ const AddEditClientForm = () => {
           <button
             type="submit"
             disabled={loading}
-            className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded"
+            className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded flex items-center gap-2"
           >
+            {loading && (
+              <svg
+                className="w-4 h-4 animate-spin text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                ></path>
+              </svg>
+            )}
             {loading ? "Saving..." : id ? "Update Client" : "Add Client"}
           </button>
         )}

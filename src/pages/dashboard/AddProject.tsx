@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { showError, showSuccess } from "../../utils/toast";
 
 interface ProjectFormData {
   title: string;
@@ -95,14 +96,18 @@ const AddProject = () => {
         await axios.put(`${API_URL}/projects/${id}`, payload, {
           headers: { Authorization: `Bearer ${token}` },
         });
+        showSuccess("Project updated successfully.");
       } else {
         await axios.post(`${API_URL}/projects`, payload, {
           headers: { Authorization: `Bearer ${token}` },
         });
+        showSuccess("Project created successfully.");
       }
       navigate("/dashboard/projects");
     } catch (err: any) {
-      setError(err.response?.data?.message || "An error occurred.");
+      const msg = err.response?.data?.message || "An error occurred.";
+      setError(msg);
+      showError(msg);
     } finally {
       setLoading(false);
     }

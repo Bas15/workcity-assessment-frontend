@@ -4,6 +4,7 @@ import { formatDate } from "../utils/dateHelper";
 import { useNavigate } from "react-router-dom";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
 import axios from "axios";
+import { showError, showSuccess } from "../utils/toast";
 
 type Client = {
   name: string;
@@ -44,10 +45,11 @@ const DashboardCardGrid: React.FC<DashboardCardGridProps> = ({
           Authorization: `Bearer ${token}`,
         },
       });
+      showSuccess("Client deleted successful");
       window.location.reload();
     } catch (error) {
       console.error("Failed to delete client", error);
-      alert("Failed to delete client. Please try again.");
+      showError("Failed to delete client. Please try again.");
     }
   };
 
