@@ -7,10 +7,20 @@ import type { AuthState, User } from "./authTypes";
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 const tokenFromStorage = localStorage.getItem("token");
-const userFromStorage = localStorage.getItem("user");
+const userFromStorage = (() => {
+  try {
+    const storedUser = localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : null;
+  } catch (error) {
+    console.error("Failed to parse user from storage:", error);
+    return null;
+  }
+})();
+
+// const userFromStorage = localStorage.getItem("user");
 
 const initialState: AuthState = {
-  user: userFromStorage ? JSON.parse(userFromStorage) : null,
+  user: userFromStorage,
   token: tokenFromStorage || null,
   loading: false,
   error: null,
@@ -28,7 +38,9 @@ export const loginUser = createAsyncThunk(
         email,
         password,
       });
-      return res.data;
+      // return res.data;
+      const { token, ...user } = res.data;
+      return { user, token };
     } catch (error: any) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Login failed"
@@ -45,8 +57,10 @@ export const registerUser = createAsyncThunk(
     thunkAPI
   ) => {
     try {
-      const res = await axios.post(`${API_URL}/auth/register`, userData);
-      return res.data;
+      const res = await axios.post(`${API_URL}/auth/signup`, userData);
+      // return res.data;
+      const { token, ...user } = res.data;
+      return { user, token };
     } catch (error: any) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Signup failed"
@@ -103,9 +117,12 @@ const authSlice = createSlice({
           localStorage.setItem("user", JSON.stringify(action.payload.user));
         }
       )
-      .addCase(registerUser.rejected, (state, action: PayloadAction<any>) => {
-        state.loading = false;
-        state.error = action.payload;
+      .addCase(registerUser.rejected, (state, action) => {
+        const errorResponse = action.payload as any;
+        const errorMessages = errorResponse?.errors?.map(
+          (err: any) => err.message
+        );
+        state.error = errorMessages?.join(", ") || "Registration failed";
       });
   },
 });

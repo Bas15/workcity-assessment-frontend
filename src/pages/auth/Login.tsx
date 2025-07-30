@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { loginUser } from "../../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const dispatch = useAppDispatch();
@@ -20,6 +21,7 @@ const Login = () => {
   };
 
   useEffect(() => {
+    console.log("user after login:", user);
     if (user) {
       navigate("/dashboard");
     }
@@ -64,6 +66,12 @@ const Login = () => {
           >
             {loading ? "Logging in..." : "Login"}
           </button>
+          <p className="text-sm text-center text-gray-400">
+            Don't have an account?{" "}
+            <Link to="/signup" className="text-purple-400 hover:underline">
+              Sign Up
+            </Link>
+          </p>
         </form>
       </div>
     </div>
